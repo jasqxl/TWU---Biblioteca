@@ -8,22 +8,25 @@ public class Book {
     private boolean isAvailStatus = true;
     private String bookDetails;
 
-    public Book(String title, String author, int publishYear) {
+    public Book() {}
+
+    public Book(String title, String author, int publishYear, boolean isAvailStatus) {
         this.title = title;
         this.author = author;
         this.publishYear = publishYear;
+        this.isAvailStatus = isAvailStatus;
         formBookDetails();
     }
 
     private void formBookDetails() {
-        this.bookDetails = String.format("%-20d", this.title) + "|" + String.format("%-12d", this.author) + "|" + Integer.toString(this.publishYear) + "|" + Boolean.toString(isAvailStatus);
+        this.bookDetails = String.format("%-20s", title) + "|" + String.format("%-12s", author) + "|" + Integer.toString(publishYear) + " |" + Boolean.toString(isAvailStatus);
     }
 
     public Book(String bookDetails) {
-        this.title = bookDetails.substring(0, 20);
-        this.author = bookDetails.substring(21, 33);
+        this.title = bookDetails.substring(0, 20).trim();
+        this.author = bookDetails.substring(21, 33).trim();
         this.publishYear = Integer.parseInt(bookDetails.substring(34, 38));
-        this.isAvailStatus = Boolean.parseBoolean(bookDetails.substring(39, bookDetails.length()));
+        this.isAvailStatus = Boolean.parseBoolean(bookDetails.substring(40, bookDetails.length()));
     }
 
     public String getTitle() {
@@ -34,7 +37,7 @@ public class Book {
         return this.author;
     }
 
-    public int publishYear() {
+    public int getPublishYear() {
         return this.publishYear;
     }
 

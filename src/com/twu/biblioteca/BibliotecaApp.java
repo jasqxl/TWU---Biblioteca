@@ -16,7 +16,6 @@ public class BibliotecaApp {
     private static String userChoice = "-1";
 
     public static void main(String[] args) {
-
         System.out.println(welcomeMessage);
         Menu.showMenu();
         options = Menu.getOption();

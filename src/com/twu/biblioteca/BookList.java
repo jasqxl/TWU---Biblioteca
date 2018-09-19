@@ -2,16 +2,16 @@ package com.twu.biblioteca;
 
 import java.io.*;
 import java.util.*;
-
 public class BookList {
 
-    private static String bookListHeader = "S/N  |" + String.format("%-20d", "Book Title") + "|" + String.format("%-12d", "Author") + "|Publish YearYear";
+    private static String bookListHeader = "S/N  |" + String.format("%-20s", "Book Title") + "|" + String.format("%-12s", "Author") + "|Publish Year";
     private static String successfulCheckOutMessage = "Thank you! Enjoy the book.\n";
     private static String unsuccessfulCheckOutMessage = "That book is not available.\n";
     private static String successfulReturnMessage = "Thank you for returning the book.\n";
     private static String unsuccessfulReturnMessage = "That is not a valid book to return.\n";
 
     private static List<Book> bookList = new ArrayList<Book>();
+
     private static String fileName = "Book List.txt";
     private static String line = null;
     private static int[] bookSerialNumberArray;
