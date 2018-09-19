@@ -1,6 +1,8 @@
 package com.twu.biblioteca;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class BibliotecaApp {
 
@@ -9,10 +11,6 @@ public class BibliotecaApp {
     private static String invalidMenuOptionMessage = "Select a valid option!\n";
     private static String actionMessage = "What would you like to do?\n";
     private static String emptyBookListMessage = "There are no available books right now, please try again later..\n";
-    private static String successfulCheckOutMessage = "Thank you! Enjoy the book.\n";
-    private static String unsuccessfulCheckOutMessage = "That book is not available.\n";
-    private static String successfulReturnMessage = "Thank you for returning the book.\n";
-    private static String unsuccessfulReturnMessage = "That is not a valid book to return.\n";
 
     private static List<String> options = new ArrayList<String>();
     private static String userChoice = "-1";
@@ -27,27 +25,29 @@ public class BibliotecaApp {
         System.out.println(goodbyeMessage);
     }
 
-
     public static void getUserChoice() {
         Scanner reader = new Scanner(System.in);
         userChoice = reader.nextLine();
-        reader.close();
     }
 
     public static void checkUserChoice() {
+
         getUserChoice();
 
-        try {
-            int i = Integer.parseInt(userChoice);
-        }
-        catch (NumberFormatException e) {
-            if (userChoice.toLowerCase() != "quit") invalidOptionSelected();
-        }
+        if (userChoice.length() >= 4 && userChoice.toLowerCase().indexOf("quit") >= 0) return;
 
-        if (isValidOption()) {
+        if (!isNumeric()) invalidOptionSelected();
+        else if (isValidOption()) {
             doAction();
         }
         else invalidOptionSelected();
+    }
+
+    private static boolean isNumeric() {
+        for (int i = 0; i < userChoice.length(); i++) {
+            if (userChoice.charAt(i) < '0' || userChoice.charAt(i) > '9') return false;
+        }
+        return true;
     }
 
     private static void invalidOptionSelected() {
@@ -63,7 +63,12 @@ public class BibliotecaApp {
     public static void doAction() {
         if (options.get(Integer.parseInt(userChoice)) == "List Books") {
             if (BookList.getBookList().size() == 0) {
-                System.out.
+                System.out.println(emptyBookListMessage);
+                checkUserChoice();
+            }
+            else {
+                BookList.listBooks();
+                //System.out.println(actionMessage);
             }
         }
     }

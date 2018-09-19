@@ -19,6 +19,7 @@ public class Menu {
     }
 
     public static void showOptions () {
+        Options.clear();
         try {
             FileReader fileReader = new FileReader(fileName);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -35,6 +36,7 @@ public class Menu {
         catch(IOException ex) {
             System.out.println("Error reading file '" + fileName + "'");
         }
+
     }
 
     private static void writeToOptionsFile(String newOption) {

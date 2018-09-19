@@ -6,10 +6,15 @@ import java.util.*;
 public class BookList {
 
     private static String bookListHeader = "S/N  |" + String.format("%-20d", "Book Title") + "|" + String.format("%-12d", "Author") + "|Publish YearYear";
+    private static String successfulCheckOutMessage = "Thank you! Enjoy the book.\n";
+    private static String unsuccessfulCheckOutMessage = "That book is not available.\n";
+    private static String successfulReturnMessage = "Thank you for returning the book.\n";
+    private static String unsuccessfulReturnMessage = "That is not a valid book to return.\n";
 
     private static List<Book> bookList = new ArrayList<Book>();
     private static String fileName = "Book List.txt";
     private static String line = null;
+    private static int[] bookSerialNumberArray;
 
     public static void retrieveBookList () {
         try {
@@ -46,14 +51,33 @@ public class BookList {
 
         System.out.println(bookListHeader);
         int bookSerialNumber = 1;
-        int[] bookSerialNumberArray = new int[bookList.size()];
+        bookSerialNumberArray = new int[bookList.size()];
 
         for (int i = 0; i < bookList.size(); i++) {
             if (bookList.get(i).getCheckOutStatus()) {
-                bookSerialNumberArray[i] = bookSerialNumber;
+                bookSerialNumberArray[bookSerialNumber - 1] = i;
                 System.out.println(String.format("%-6d", bookSerialNumber) + bookList.get(i).listBookDetail());
                 bookSerialNumber++;
             }
+        }
+    }
+
+    public static void checkOutABook(int serial) {
+        if (bookList.get(bookSerialNumberArray[serial - 1]) != null && bookList.get(bookSerialNumberArray[serial - 1]).getCheckOutStatus()) {
+            bookList.get(bookSerialNumberArray[serial - 1]).checkOutBook();
+            System.out.println(successfulCheckOutMessage);
+        }
+        else {
+            System.out.println(unsuccessfulCheckOutMessage);
+        }
+    }
+
+    public static void returnABook(int serial) {
+        if (bookList.get(bookSerialNumberArray[serial - 1]) == null && !(bookList.get(bookSerialNumberArray[serial - 1]).getCheckOutStatus())) {
+            bookList.get(bookSerialNumberArray[serial - 1]).returnBook();
+            System.out.println(successfulReturnMessage);
+        }else {
+            System.out.println(unsuccessfulReturnMessage);
         }
     }
 
