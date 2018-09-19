@@ -5,7 +5,6 @@ import java.util.*;
 
 public class Menu {
 
-    private static String welcomeMessage = "Welcome to Biblioteca :)\n";
     private static String menuHeading = "Please choose an action from the list below:";
 
     private static List<String> Options = new ArrayList<String>();
@@ -14,16 +13,12 @@ public class Menu {
 
     //private static String workingOptionFilePath = System.getProperty("user.dir") + "/Options.txt";
 
-    public static void getWelcomeMessage() {
-        System.out.println(welcomeMessage);
-    }
-
     public static void showMenu() {
         System.out.println(menuHeading);
-        getOptions();
+        showOptions();
     }
 
-    public static void getOptions () {
+    public static void showOptions () {
         try {
             FileReader fileReader = new FileReader(fileName);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -35,7 +30,7 @@ public class Menu {
         }
         catch(FileNotFoundException ex) {
             writeToOptionsFile("List Books");
-            getOptions();
+            showOptions();
         }
         catch(IOException ex) {
             System.out.println("Error reading file '" + fileName + "'");
@@ -56,5 +51,9 @@ public class Menu {
 
     public static void addOption(String newOptionToAdd) {
         writeToOptionsFile(newOptionToAdd);
+    }
+
+    public static List<String> getOption() {
+        return Options;
     }
 }
