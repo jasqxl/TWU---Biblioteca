@@ -27,6 +27,7 @@ public class Book {
         this.author = bookDetails.substring(21, 33).trim();
         this.publishYear = Integer.parseInt(bookDetails.substring(34, 38));
         this.isAvailStatus = Boolean.parseBoolean(bookDetails.substring(40, bookDetails.length()));
+        this.bookDetails = bookDetails;
     }
 
     public String getTitle() {
@@ -47,12 +48,14 @@ public class Book {
 
 
     public String listBookDetail() {
-        return bookDetails.substring(0, 38);
+        return (this.bookDetails != null) ? bookDetails.substring(0, 38) : null;
     }
 
     public void checkOutBook() {
-        this.isAvailStatus = false;
-        formBookDetails();
+        if (this.title != null && this.author != null && this.publishYear == 0) {
+            this.isAvailStatus = false;
+            formBookDetails();
+        }
     }
 
     public void returnBook() {

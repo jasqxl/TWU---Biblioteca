@@ -15,7 +15,15 @@ public class BibliotecaApp {
     private static List<String> options = new ArrayList<String>();
     private static String userChoice = "-1";
 
+    private static Book testBookAttribute = new Book("Lord of the Rings", "ME", 1994, false);
+    private static Book testBookDetail = new Book("Lord of the Rings 2 |Uncle       |2018 |true");
+    private static Book emptyBook = new Book();
+
     public static void main(String[] args) {
+        emptyBook.checkOutBook();
+
+        System.out.println(emptyBook.getCheckOutStatus());
+
         System.out.println(welcomeMessage);
         Menu.showMenu();
         options = Menu.getOption();
