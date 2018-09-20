@@ -63,7 +63,7 @@ public class Menu {
     public static void removeOptions(String optionToRemove) {
 
         for (int i = 0; i < Options.size(); i++) {
-            if (Options.get(i).indexOf(optionToRemove) != -1) {
+            if (Options.get(i).toLowerCase().indexOf(optionToRemove.toLowerCase()) != -1) {
                 Options.remove(i);
                 i = Options.size();
             }

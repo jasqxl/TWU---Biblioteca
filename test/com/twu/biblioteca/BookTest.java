@@ -12,7 +12,7 @@ public class BookTest {
 
     private Book emptyBook = new Book();
     private Book testBookAttribute = new Book("Lord of the Rings", "ME", 1994, false);
-    private Book testBookDetail = new Book("Lord of the Rings 2           |Uncle               |2018    |true");
+    private Book testBookDetail = new Book("Lord of the Rings 2           |Uncle               |2018    |Available");
 
     @Test
     public void testGetTitle() {
