@@ -46,6 +46,8 @@ public class BookListTest {
         assertEquals("Book to handling bruh", BookList.getBookList().get(1).getTitle());
         assertEquals("bot", BookList.getBookList().get(1).getAuthor());
         assertEquals(1967, BookList.getBookList().get(1).getPublishYear());
+
+        BookList.removeAllBooks();
     }
 
     @Test
@@ -67,6 +69,7 @@ public class BookListTest {
         BookList.removeAllBooks();
         assertEquals(0, BookList.getBookList().size());
 
+        BookList.removeAllBooks();
     }
 
     @Test
@@ -86,6 +89,8 @@ public class BookListTest {
                 "2    |Book to handling bruh         |bot                 |1967\n"
                 //"Lord of the Rings 2           |handphone           |2004\n"
                 , BookList.listBooks());
+
+        BookList.removeAllBooks();
     }
 
     @Test
@@ -120,6 +125,8 @@ public class BookListTest {
                 successfulCheckOutMessage + "\n" +
                 unsuccessfulCheckOutMessage + "\n"
                 , outContent.toString());
+
+        BookList.removeAllBooks();
     }
 
     @Test
@@ -146,6 +153,8 @@ public class BookListTest {
                 unsuccessfulReturnMessage + "\n" +
                 successfulReturnMessage + "\n"
                 , outContent.toString());
+
+        BookList.removeAllBooks();
     }
 
     @After
