@@ -56,16 +56,26 @@ public class BibliotecaApp {
     }
 
     private static int parseOption(String userChoice, List<String> options) {
-        if (userChoice.length() >= 4 && userChoice.toLowerCase().indexOf("quit") >= 0) return 0;
-        return isNumericAndValid(userChoice, options);
+        if (isQuit(userChoice, options)) return 0;
+        if (!isNumeric(userChoice, options)) return -1;
+        if (isOptionValid(userChoice, options)) return Integer.parseInt(userChoice);
+        return -1;
     }
 
-    private static int isNumericAndValid(String userChoice, List<String> options) {
-        for (int i = 0; i < userChoice.length(); i++) {
-            if (userChoice.charAt(i) < '0' || userChoice.charAt(i) > '9') return -1;
-        }
+    private static boolean isQuit(String userChoice, List<String> options) {
+        if (userChoice.length() >= 4 && userChoice.toLowerCase().indexOf("quit") >= 0) return true;
+        return false;
+    }
 
-        if (Integer.parseInt(userChoice) < 1 || Integer.parseInt(userChoice) > options.size()) return -1;
-        return (options.get(Integer.parseInt(userChoice) - 1) != null) ? Integer.parseInt(userChoice) : -1;
+    private static boolean isNumeric(String userChoice, List<String> options) {
+        for (int i = 0; i < userChoice.length(); i++) {
+            if (userChoice.charAt(i) < '0' || userChoice.charAt(i) > '9') return false;
+        }
+        return true;
+    }
+
+    private static boolean isOptionValid(String userChoice, List<String> options) {
+        if (Integer.parseInt(userChoice) < 1 || Integer.parseInt(userChoice) > options.size()) return false;
+        return (options.get(Integer.parseInt(userChoice) - 1) != null) ? true : false;
     }
 }
