@@ -6,8 +6,6 @@ import java.util.Scanner;
 
 public class BibliotecaApp {
 
-    private static String welcomeMessage = "Welcome to Biblioteca :)\n";
-    private static String goodbyeMessage = "Thank you for using Biblioteca..\n";
     private static String invalidMenuOptionMessage = "Select a valid option!\n";
     private static String actionMessage = "What would you like to do?\n";
     private static String emptyBookListMessage = "There are no available books right now, please try again later..\n";
@@ -15,21 +13,12 @@ public class BibliotecaApp {
     private static List<String> options = new ArrayList<String>();
     private static String userChoice = "-1";
 
-    private static Book testBookAttribute = new Book("Lord of the Rings", "ME", 1994, false);
-    private static Book testBookDetail = new Book("Lord of the Rings 2 |Uncle       |2018 |true");
-    private static Book emptyBook = new Book();
-
     public static void main(String[] args) {
-        emptyBook.checkOutBook();
 
-        System.out.println(emptyBook.getCheckOutStatus());
-
-        System.out.println(welcomeMessage);
-        Menu.showMenu();
-        options = Menu.getOption();
-
+        Menu.openProgram();
+        options = Menu.getOptions();
         checkUserChoice();
-        System.out.println(goodbyeMessage);
+        Menu.closeProgram();
     }
 
     public static void getUserChoice() {

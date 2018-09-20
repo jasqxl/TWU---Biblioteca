@@ -1,9 +1,6 @@
 package com.twu.biblioteca;
 
-import org.junit.*;
-
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
@@ -15,7 +12,7 @@ public class BookTest {
 
     private Book emptyBook = new Book();
     private Book testBookAttribute = new Book("Lord of the Rings", "ME", 1994, false);
-    private Book testBookDetail = new Book("Lord of the Rings 2 |Uncle       |2018 |true");
+    private Book testBookDetail = new Book("Lord of the Rings 2           |Uncle               |2018    |true");
 
     @Test
     public void testGetTitle() {
@@ -41,8 +38,8 @@ public class BookTest {
     @Test
     public void testListBookDetail() {
         assertEquals(null, emptyBook.listBookDetail());
-        assertEquals("Lord of the Rings   |ME          |1994", testBookAttribute.listBookDetail());
-        assertEquals("Lord of the Rings 2 |Uncle       |2018", testBookDetail.listBookDetail());
+        assertEquals("Lord of the Rings             |ME                  |1994", testBookAttribute.listBookDetail());
+        assertEquals("Lord of the Rings 2           |Uncle               |2018", testBookDetail.listBookDetail());
     }
 
     @Test
@@ -52,39 +49,33 @@ public class BookTest {
         assertTrue(testBookDetail.getCheckOutStatus());
     }
 
-    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final PrintStream originalOut = System.out;
-
-    @Before
-    public void setUpStreams() {
-        System.setOut(new PrintStream(outContent));
-    }
-
-
     @Test
     public void testCheckOutBook() {
         assertTrue(emptyBook.getCheckOutStatus());
         emptyBook.checkOutBook();
         assertTrue(emptyBook.getCheckOutStatus());
-        assertEquals(unsuccessfulCheckOutMessage, outContent);
 
         assertFalse(testBookAttribute.getCheckOutStatus());
         testBookAttribute.checkOutBook();
         assertFalse(testBookAttribute.getCheckOutStatus());
-        assertEquals(unsuccessfulCheckOutMessage, outContent);
 
         assertTrue(testBookDetail.getCheckOutStatus());
         testBookDetail.checkOutBook();
         assertFalse(testBookDetail.getCheckOutStatus());
-        assertEquals(successfulCheckOutMessage, outContent);
     }
 
     @Test
-    public void returnBook() {
-    }
+    public void testReturnBook() {
+        assertTrue(emptyBook.getCheckOutStatus());
+        emptyBook.returnBook();
+        assertTrue(emptyBook.getCheckOutStatus());
 
-    @After
-    public void restoreStreams() {
-        System.setOut(originalOut);
+        assertFalse(testBookAttribute.getCheckOutStatus());
+        testBookAttribute.returnBook();
+        assertTrue(testBookAttribute.getCheckOutStatus());
+
+        assertTrue(testBookDetail.getCheckOutStatus());
+        testBookDetail.returnBook();
+        assertTrue(testBookDetail.getCheckOutStatus());
     }
 }

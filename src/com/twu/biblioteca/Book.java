@@ -19,14 +19,14 @@ public class Book {
     }
 
     private void formBookDetails() {
-        this.bookDetails = String.format("%-20s", title) + "|" + String.format("%-12s", author) + "|" + Integer.toString(publishYear) + " |" + Boolean.toString(isAvailStatus);
+        this.bookDetails = String.format("%-30s", title) + "|" + String.format("%-20s", author) + "|" + String.format("%-8s", Integer.toString(publishYear)) + "|" + Boolean.toString(isAvailStatus);
     }
 
     public Book(String bookDetails) {
-        this.title = bookDetails.substring(0, 20).trim();
-        this.author = bookDetails.substring(21, 33).trim();
-        this.publishYear = Integer.parseInt(bookDetails.substring(34, 38));
-        this.isAvailStatus = Boolean.parseBoolean(bookDetails.substring(40, bookDetails.length()));
+        this.title = bookDetails.substring(0, 30).trim();
+        this.author = bookDetails.substring(31, 51).trim();
+        this.publishYear = Integer.parseInt(bookDetails.substring(52, 56));
+        this.isAvailStatus = Boolean.parseBoolean(bookDetails.substring(61, bookDetails.length()));
         this.bookDetails = bookDetails;
     }
 
@@ -48,11 +48,11 @@ public class Book {
 
 
     public String listBookDetail() {
-        return (this.bookDetails != null) ? bookDetails.substring(0, 38) : null;
+        return (this.bookDetails != null) ? bookDetails.substring(0, 56) : null;
     }
 
     public void checkOutBook() {
-        if (this.title != null && this.author != null && this.publishYear == 0) {
+        if (this.title != null && this.author != null && this.publishYear != 0) {
             this.isAvailStatus = false;
             formBookDetails();
         }

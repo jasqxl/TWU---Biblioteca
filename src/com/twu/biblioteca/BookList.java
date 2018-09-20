@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 public class BookList {
 
-    private static String bookListHeader = "S/N  |" + String.format("%-20s", "Book Title") + "|" + String.format("%-12s", "Author") + "|Publish Year";
+    private static String bookListHeader = "S/N  |" + String.format("%-30s", "Book Title") + "|" + String.format("%-30s", "Author") + "|Publish Year";
     private static String successfulCheckOutMessage = "Thank you! Enjoy the book.\n";
     private static String unsuccessfulCheckOutMessage = "That book is not available.\n";
     private static String successfulReturnMessage = "Thank you for returning the book.\n";
