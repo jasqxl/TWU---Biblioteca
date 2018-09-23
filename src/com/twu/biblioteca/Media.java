@@ -10,7 +10,6 @@ public interface Media {
     public String listDetail();
     public String listAllDetail();
 
-
     public void checkOutItem();
     public void returnItem();
 }

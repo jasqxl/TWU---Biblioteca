@@ -101,7 +101,7 @@ public class BookListTest {
                 "1    |Hang of the Rings 2           |Uncle               |2018\n" +
                 "2    |Book to handling bruh         |bot                 |1967\n"
                 //"Lord of the Rings 2           |handphone           |2004\n"
-                , BookList.listBooks());
+                , BookList.listBooks(BookList.getBookList()));
 
         BookList.removeAllBooks();
     }
@@ -169,17 +169,18 @@ public class BookListTest {
         BookList.addBookToList(testBook5);
         BookList.addBookToList(testBook8);
 
-        BookList.returnABook(testBook6.getTitle(), testBook6.getCreator(), testBook6.getReleaseYear());
+        assertEquals(4, BookList.getUnavailableList().size());
 
-        assertTrue(BookList.getBookList().get(1).getCheckOutStatus());
-        BookList.returnABook(testBook2.getTitle(), testBook2.getCreator(), testBook2.getReleaseYear());
-        assertTrue(BookList.getBookList().get(1).getCheckOutStatus());
+        BookList.returnABook(0);
+        BookList.returnABook(5);
+
+        assertEquals(4, BookList.getUnavailableList().size());
 
         assertEquals(unsuccessfulReturnMessage + "\n" +
                 unsuccessfulReturnMessage + "\n"
                 , outContent.toString());
 
-        BookList.removeAllBooks();
+        //BookList.removeAllBooks();
     }
 
     @Test
@@ -192,9 +193,11 @@ public class BookListTest {
         BookList.addBookToList(testBook5);
         BookList.addBookToList(testBook8);
 
-        assertFalse(BookList.getBookList().get(3).getCheckOutStatus());
-        BookList.returnABook(testBook4.getTitle(), testBook4.getCreator(), testBook4.getReleaseYear());
-        assertTrue(BookList.getBookList().get(3).getCheckOutStatus());
+        assertEquals(4, BookList.getUnavailableList().size());
+
+        BookList.returnABook(4);
+
+        assertEquals(3, BookList.getUnavailableList().size());
 
         assertEquals(successfulReturnMessage + "\n", outContent.toString());
 

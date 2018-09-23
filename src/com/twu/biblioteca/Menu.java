@@ -9,15 +9,21 @@ public class Menu {
     private static String goodbyeMessage = "Thank you for using Biblioteca..\n";
     private static String menuHeading = "Please choose an action from the list below:";
 
-    private static List<String> Options = new ArrayList<String>();
-    private static String fileName = "Options.txt";
+    private static List<String> necessaryOptions = new ArrayList<String>();
+    private static List<String> actionOptions = new ArrayList<String>();
+    private static List<String> options = new ArrayList<String>();
+    private static String fileName = "options.txt";
     private static String line = null;
 
-    //private static String workingOptionFilePath = System.getProperty("user.dir") + "/Options.txt";
-
     public static void openProgram() {
+        necessaryOptions.clear();
+        necessaryOptions.add("List Books");
+        options = necessaryOptions;
+        actionOptions.clear();
+        actionOptions.add("Check out item");
+        actionOptions.add("Return item");
+
         System.out.println(welcomeMessage);
-        showMenu();
     }
 
     public static void closeProgram() {
@@ -25,7 +31,7 @@ public class Menu {
     }
 
     public static void showMenu () {
-        Options.clear();
+        options.clear();
 
         try {
             FileReader fileReader = new FileReader(fileName);
@@ -34,8 +40,8 @@ public class Menu {
             System.out.println(menuHeading);
 
             while((line = bufferedReader.readLine()) != null) {
-                Options.add(line);
-                System.out.println(Options.size() + ") " + Options.get(Options.size()-1));
+                options.add(line);
+                System.out.println(options.size() + ") " + options.get(options.size()-1));
             }
             bufferedReader.close();
         }
@@ -47,7 +53,18 @@ public class Menu {
         }
     }
 
-    private static void writeToOptionsFile(String newOption) {
+    public static void showActionMenu () {
+        printMenu(actionOptions);
+        System.out.print("\nEnter number of choice here: ");
+    }
+
+    private static void printMenu(List<String> menu) {
+        for (int i = 0; i < menu.size(); i++) {
+            System.out.println(i + 1 + ") " + menu.get(i));
+        }
+    }
+
+    public static void writeToOptionsFile(String newOption) {
         try (FileWriter fileWriter = new FileWriter(fileName, true);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
              PrintWriter printWriter = new PrintWriter(bufferedWriter)) {
@@ -61,10 +78,10 @@ public class Menu {
 
     public static void removeOptions(String optionToRemove) {
 
-        for (int i = 0; i < Options.size(); i++) {
-            if (Options.get(i).toLowerCase().indexOf(optionToRemove.toLowerCase()) != -1) {
-                Options.remove(i);
-                i = Options.size();
+        for (int i = 0; i < options.size(); i++) {
+            if (options.get(i).toLowerCase().indexOf(optionToRemove.toLowerCase()) != -1) {
+                options.remove(i);
+                i = options.size();
             }
         }
 
@@ -72,8 +89,8 @@ public class Menu {
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
              PrintWriter printWriter = new PrintWriter(bufferedWriter)) {
 
-            for (int i = 0; i < Options.size(); i++) {
-                printWriter.println(Options.get(i));
+            for (int i = 0; i < options.size(); i++) {
+                printWriter.println(options.get(i));
             }
         }
         catch(IOException ex1) {
@@ -83,8 +100,8 @@ public class Menu {
     }
 
     public static void removeAllOptions() {
-        Options.clear();
-        Options.add("List Books");
+        options.clear();
+        options.add("List Books");
 
         try (FileWriter fileWriter = new FileWriter(fileName, false);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -96,11 +113,11 @@ public class Menu {
         }
     }
 
-    public static void addOption(String newOptionToAdd) {
-        writeToOptionsFile(newOptionToAdd);
+    public static List<String> getMenu() {
+        return options;
     }
 
-    public static List<String> getOptions() {
-        return Options;
+    public static List<String> getActionMenu() {
+        return actionOptions;
     }
 }

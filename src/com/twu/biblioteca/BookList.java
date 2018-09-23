@@ -12,25 +12,29 @@ public class BookList {
     private static String emptyBookListMessage = "There are no available books right now, please try again later..\n";
 
     private static List<Book> bookList = new ArrayList<Book>();
+    private static List<Book> availableBookList = new ArrayList<Book>();
+    private static List<Book> unavailableBookList = new ArrayList<Book>();
 
     private static String fileName = "Book List.txt";
     private static String line = null;
-    private static int[] bookSerialNumberArray;
+    private static int[] availableBooksArray;
+    private static int[] unavailableBooksArray;
     private static int numberOfAvailableBooks;
+    private static int numberOfUnavailableBooks;
     private static String listOfBooks;
 
     private static void retrieveBookList () {
         bookList.clear();
-        numberOfAvailableBooks = 0;
 
         try {
             FileReader fileReader = new FileReader(fileName);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
-            while((line = bufferedReader.readLine()) != null) {
+
+            while((line = bufferedReader.readLine()) != null && line.trim().length() > 0) {
                 Book newBook = new Book(line);
                 bookList.add(newBook);
-                if (bookList.get(bookList.size()-1).getCheckOutStatus()) numberOfAvailableBooks++;
             }
+
             bufferedReader.close();
         }
         catch(FileNotFoundException ex) {
@@ -38,9 +42,7 @@ public class BookList {
         catch(IOException ex) {
             System.out.println("Error reading file '" + fileName + "'");
         }
-
-        bookSerialNumberArray = null;
-        listOfBooks = listBooks();
+        if (bookList.size() != 0) listOfBooks = listBooks(bookList);
     }
 
     public static void addBookToList(Book newBook) {
@@ -48,6 +50,20 @@ public class BookList {
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
              PrintWriter printWriter = new PrintWriter(bufferedWriter)) {
             printWriter.println(newBook.listAllDetail());
+        }
+        catch(IOException ex1) {
+            System.out.println("Error reading file '" + fileName + "'");
+        }
+        retrieveBookList();
+    }
+
+    private static void writeToFile (List <Book> bookList) {
+        try (FileWriter fileWriter = new FileWriter(fileName, false);
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+             PrintWriter printWriter = new PrintWriter(bufferedWriter)) {
+            for (int i = 0; i < bookList.size(); i++) {
+                printWriter.println(bookList.get(i).listAllDetail());
+            }
         }
         catch(IOException ex1) {
             System.out.println("Error reading file '" + fileName + "'");
@@ -81,9 +97,11 @@ public class BookList {
 
     public static void removeAllBooks() {
         bookList.clear();
-        bookSerialNumberArray = null;
+        availableBooksArray = null;
+        unavailableBooksArray = null;
         listOfBooks = null;
         numberOfAvailableBooks = 0;
+        numberOfUnavailableBooks = 0;
 
         try (FileWriter fileWriter = new FileWriter(fileName, false);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -95,75 +113,90 @@ public class BookList {
         }
     }
 
-    public static String listBooks() {
+    public static String listBooks(List <Book> bookList) {
         listOfBooks = "";
+        availableBooksArray = null;
+        unavailableBooksArray = null;
+        numberOfAvailableBooks = 0;
+        numberOfUnavailableBooks = 0;
+        availableBookList.clear();
+        unavailableBookList.clear();
 
         if (bookList.size() == 0) {
-            listOfBooks = emptyBookListMessage;
+            retrieveBookList();
+            if (bookList.size() == 0) listOfBooks = emptyBookListMessage;
         }
         else {
             listOfBooks = listOfBooks + bookListHeader + "\n";
-            int bookSerialNumber = 1;
-            bookSerialNumberArray = new int[bookList.size()];
+            availableBooksArray = new int[bookList.size()];
+            unavailableBooksArray = new int[bookList.size()];
             numberOfAvailableBooks = 0;
 
             for (int i = 0; i < bookList.size(); i++) {
                 if (bookList.get(i).getCheckOutStatus()) {
                     numberOfAvailableBooks++;
-                    bookSerialNumberArray[bookSerialNumber - 1] = i;
-                    listOfBooks = listOfBooks + String.format("%-5d", bookSerialNumber) + "|" + bookList.get(i).listDetail() + "\n";
-                    bookSerialNumber++;
+                    availableBookList.add(bookList.get(i));
+                    availableBooksArray[numberOfAvailableBooks - 1] = i;
+                    listOfBooks = listOfBooks + String.format("%-5d", numberOfAvailableBooks) + "|" + bookList.get(i).listDetail() + "\n";
+                }
+                else {
+                    numberOfUnavailableBooks++;
+                    unavailableBookList.add(bookList.get(i));
+                    unavailableBooksArray[numberOfUnavailableBooks - 1] = i;
                 }
             }
         }
-
         return listOfBooks;
     }
 
-    public static void checkOutABook(int serial) {
-        bookSerialNumberArray = null;
-        listOfBooks = listBooks();
+    public static String printList(List<Book> listToPrint) {
+        String out = "";
+        out = out + bookListHeader + "\n";
+        for (int i = 0; i < listToPrint.size(); i++) {
+            out = out + String.format("%-5d", i + 1) + "|" + listToPrint.get(i).listDetail() + "\n";
+        }
+        return out;
+    }
 
+    public static void checkOutABook(int serial) {
         if (serial < 1 || serial > numberOfAvailableBooks) {
             System.out.println(unsuccessfulCheckOutMessage);
         }
-        else if (bookList.get(bookSerialNumberArray[serial - 1]) != null &&
-                bookList.get(bookSerialNumberArray[serial - 1]).getCheckOutStatus()) {
-            bookList.get(bookSerialNumberArray[serial - 1]).checkOutItem();
+        else if (bookList.get(availableBooksArray[serial - 1]) != null &&
+                bookList.get(availableBooksArray[serial - 1]).getCheckOutStatus()) {
+            bookList.get(availableBooksArray[serial - 1]).checkOutItem();
             System.out.println(successfulCheckOutMessage);
         }
         else {
             System.out.println(unsuccessfulCheckOutMessage);
         }
-
-        bookSerialNumberArray = null;
-        listOfBooks = listBooks();
+        writeToFile(bookList);
     }
 
-    public static void returnABook(String title, String creator, int publishYear) {
-        Boolean isReturned = false;
-
-        for (int i = 0; i < bookList.size(); i++) {
-            if (bookList.get(i).getTitle().toLowerCase().indexOf(title.toLowerCase()) != -1 &&
-                    bookList.get(i).getCreator().toLowerCase().indexOf(creator.toLowerCase()) != -1 &&
-                    bookList.get(i).getReleaseYear() == publishYear &&
-                    bookList.get(i).getCheckOutStatus() == false) {
-                bookList.get(i).returnItem();
-                isReturned = true;
-                System.out.println(successfulReturnMessage);
-                i = bookList.size();
-            }
-        }
-
-        if (!isReturned) {
+    public static void returnABook(int serial) {
+        if (serial < 1 || serial > numberOfUnavailableBooks) {
             System.out.println(unsuccessfulReturnMessage);
         }
-
-        bookSerialNumberArray = null;
-        listOfBooks = listBooks();
+        else if (bookList.get(unavailableBooksArray[serial - 1]) != null &&
+                !bookList.get(unavailableBooksArray[serial - 1]).getCheckOutStatus()) {
+            bookList.get(unavailableBooksArray[serial - 1]).returnItem();
+            System.out.println(successfulReturnMessage);
+        }
+        else {
+            System.out.println(unsuccessfulReturnMessage);
+        }
+        writeToFile(bookList);
     }
 
     public static List<Book> getBookList() {
         return bookList;
+    }
+
+    public static List<Book> getAvailableList() {
+        return availableBookList;
+    }
+
+    public static List<Book> getUnavailableList() {
+        return unavailableBookList;
     }
 }
