@@ -18,14 +18,12 @@ public class BibliotecaApp {
 
         do {
             Menu.showMenu();
-            input = Integer.toString(checkUserChoice(getUserChoice(), Menu.getMenu()));
+            input = Integer.toString(checkUserChoice(getUserChoice(), Menu.getMenu().size()));
 
             if (Integer.parseInt(input) > 0) {
                 doAction(input, Menu.getMenu());
             }
-
-            if (input.trim().toLowerCase().equals("quit")) input = "-1";
-        } while (Integer.parseInt(input) >= 0);
+        } while (Integer.parseInt(input) != 0);
 
         Menu.closeProgram();
     }
@@ -35,9 +33,9 @@ public class BibliotecaApp {
         return reader.nextLine();
     }
 
-    public static int checkUserChoice(String userChoice, List<String> options) {
-        if (parseOption(userChoice, options) == 0) return 0;
-        if (parseOption(userChoice, options) != -1) return parseOption(userChoice, options);
+    public static int checkUserChoice(String userChoice, int sizeOfList) {
+        if (parseOption(userChoice, sizeOfList) == 0) return 0;
+        if (parseOption(userChoice, sizeOfList) != -1) return parseOption(userChoice, sizeOfList);
         else invalidOptionSelected();
         return -1;
     }
@@ -48,10 +46,10 @@ public class BibliotecaApp {
 
     public static void doAction(String userChoice, List<String> options) {
         if (options.get(Integer.parseInt(userChoice) - 1).equals("List Books")) {
-            System.out.println(BookList.listBooks(BookList.getBookList()));
+            System.out.println("\n" + BookList.listBooks(BookList.getBookList()));
 
             if (BookList.getBookList().size() == 0) {
-                checkUserChoice(userChoice, options);
+                checkUserChoice(userChoice, options.size());
             }
             else {
                 BookList.listBooks(BookList.getBookList());
@@ -64,49 +62,43 @@ public class BibliotecaApp {
         System.out.println(actionMessage);
         Menu.showActionMenu();
 
-        Boolean actionDone = false;
         do {
-            input = Integer.toString(checkUserChoice(getUserChoice(), Menu.getActionMenu()));
-        } while (!(Integer.parseInt(input) > 0));
+            input = Integer.toString(checkUserChoice(getUserChoice(), Menu.getActionMenu().size()));
+        } while (Integer.parseInt(input) < 0);
 
         if (Integer.parseInt(input) > 0) {
             if (options.get(Integer.parseInt(input) - 1).equals("Check out item")) {
                 do {
-                    System.out.println(checkOutMessage);
-                    input = getUserChoice();
-                    if (isNumeric(input) && !isQuit(input)) {
-                        if (Integer.parseInt(input) > 0 && Integer.parseInt(input) <= BookList.getAvailableList().size()) {
-                            BookList.checkOutABook(Integer.parseInt(input));
-                            actionDone = true;
-                        }
+                    if (BookList.getAvailableList().size() != 0) {
+                        System.out.println(checkOutMessage);
+                        input = Integer.toString(checkUserChoice(getUserChoice(), BookList.getAvailableList().size()));
+
+                        if (Integer.parseInt(input) > 0) BookList.checkOutABook(Integer.parseInt(input));
+
                     }
-                } while ((!isNumeric(input) || Integer.parseInt(input) == 0 ||
-                        Integer.parseInt(input) > BookList.getAvailableList().size() ||
-                        !actionDone) &&  !isQuit(input));
+                    else System.out.println(BookList.listBooks(BookList.getBookList()));
+                } while (Integer.parseInt(input) < 0);
             }
             else if (options.get(Integer.parseInt(input) - 1).equals("Return item")) {
                 do {
                     System.out.println(BookList.printList(BookList.getUnavailableList()));
-                    System.out.println(returnMessage);
-                    input = getUserChoice();
-                    if (isNumeric(input) && !isQuit(input)) {
-                        if (Integer.parseInt(input) > 0 && Integer.parseInt(input) <= BookList.getUnavailableList().size()) {
-                            BookList.returnABook(Integer.parseInt(input));
-                            actionDone = true;
-                        }
+                    if (BookList.getUnavailableList().size() != 0) {
+                        System.out.println(returnMessage);
+
+                        input = Integer.toString(checkUserChoice(getUserChoice(), BookList.getUnavailableList().size()));
+
+                        if (Integer.parseInt(input) > 0) BookList.returnABook(Integer.parseInt(input));
                     }
-                } while ((!isNumeric(input) || Integer.parseInt(input) == 0 ||
-                        Integer.parseInt(input) > BookList.getUnavailableList().size() ||
-                        !actionDone) && !isQuit(input));
+                } while (Integer.parseInt(input) < 0);
 
             }
         }
     }
 
-    private static int parseOption(String userChoice, List<String> options) {
+    private static int parseOption(String userChoice, int sizeOfList) {
         if (isQuit(userChoice)) return 0;
         if (!isNumeric(userChoice)) return -1;
-        if (isOptionValid(userChoice, options)) return Integer.parseInt(userChoice);
+        if (isOptionValid(userChoice, sizeOfList)) return Integer.parseInt(userChoice);
         return -1;
     }
 
@@ -122,8 +114,9 @@ public class BibliotecaApp {
         return true;
     }
 
-    private static boolean isOptionValid(String userChoice, List<String> options) {
-        if (Integer.parseInt(userChoice) < 1 || Integer.parseInt(userChoice) > options.size()) return false;
-        return (options.get(Integer.parseInt(userChoice) - 1) != null) ? true : false;
+    private static boolean isOptionValid(String userChoice, int sizeOfList) {
+        if (userChoice.trim().length() == 0) return false;
+        if (Integer.parseInt(userChoice) < 1 || Integer.parseInt(userChoice) > sizeOfList) return false;
+        return true;
     }
 }

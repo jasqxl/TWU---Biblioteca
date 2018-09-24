@@ -32,12 +32,12 @@ public class BibliotecaAppTest {
         options.add("Check out books");
         options.add("Return book");
 
-        checkUserChoice("quit", options);
+        checkUserChoice("quit", options.size());
         assertEquals("", outContent.toString());
 
         outContent.reset();
 
-        checkUserChoice("Quit", options);
+        checkUserChoice("Quit", options.size());
         assertEquals("", outContent.toString());
     }
 
@@ -47,17 +47,17 @@ public class BibliotecaAppTest {
         options.add("Check out books");
         options.add("Return book");
 
-        checkUserChoice("0", options);
+        checkUserChoice("0", options.size());
         assertEquals(invalidMenuOptionMessage + "\n", outContent.toString());
 
         outContent.reset();
 
-        checkUserChoice("dg f", options);
+        checkUserChoice("dg f", options.size());
         assertEquals(invalidMenuOptionMessage + "\n", outContent.toString());
 
         outContent.reset();
 
-        checkUserChoice("-2", options);
+        checkUserChoice("-2", options.size());
         assertEquals(invalidMenuOptionMessage + "\n", outContent.toString());
     }
 
@@ -67,12 +67,12 @@ public class BibliotecaAppTest {
         options.add("Check out books");
         options.add("Return book");
 
-        checkUserChoice("2", options);
+        checkUserChoice("2", options.size());
         assertEquals("", outContent.toString());
 
         outContent.reset();
 
-        checkUserChoice("3", options);
+        checkUserChoice("3", options.size());
         assertEquals("", outContent.toString());
     }
 

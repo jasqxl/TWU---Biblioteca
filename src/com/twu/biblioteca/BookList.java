@@ -9,7 +9,8 @@ public class BookList {
     private static String unsuccessfulCheckOutMessage = "That book is not available.\n";
     private static String successfulReturnMessage = "Thank you for returning the book.\n";
     private static String unsuccessfulReturnMessage = "That is not a valid book to return.\n";
-    private static String emptyBookListMessage = "There are no available books right now, please try again later..\n";
+    private static String emptyAvailableBookListMessage = "There are no available books right now, please try again later..\n";
+    private static String emptyUnavailableBookListMessage = "All books are returned ^^\n";
 
     private static List<Book> bookList = new ArrayList<Book>();
     private static List<Book> availableBookList = new ArrayList<Book>();
@@ -124,7 +125,7 @@ public class BookList {
 
         if (bookList.size() == 0) {
             retrieveBookList();
-            if (bookList.size() == 0) listOfBooks = emptyBookListMessage;
+            if (bookList.size() == 0) listOfBooks = emptyAvailableBookListMessage;
         }
         else {
             listOfBooks = listOfBooks + bookListHeader + "\n";
@@ -145,15 +146,21 @@ public class BookList {
                     unavailableBooksArray[numberOfUnavailableBooks - 1] = i;
                 }
             }
+
+            if (numberOfAvailableBooks == 0) listOfBooks = emptyAvailableBookListMessage;
         }
         return listOfBooks;
     }
 
     public static String printList(List<Book> listToPrint) {
         String out = "";
-        out = out + bookListHeader + "\n";
-        for (int i = 0; i < listToPrint.size(); i++) {
-            out = out + String.format("%-5d", i + 1) + "|" + listToPrint.get(i).listDetail() + "\n";
+
+        if (listToPrint.size() == 0) return "\n" + emptyUnavailableBookListMessage;
+        else {
+            out = out + "\n" + bookListHeader + "\n";
+            for (int i = 0; i < listToPrint.size(); i++) {
+                out = out + String.format("%-5d", i + 1) + "|" + listToPrint.get(i).listDetail() + "\n";
+            }
         }
         return out;
     }

@@ -55,7 +55,7 @@ public class Menu {
 
     public static void showActionMenu () {
         printMenu(actionOptions);
-        System.out.print("\nEnter number of choice here: ");
+        System.out.print("\nEnter choice: ");
     }
 
     private static void printMenu(List<String> menu) {
